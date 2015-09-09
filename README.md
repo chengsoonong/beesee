@@ -13,7 +13,7 @@ Some annotations,
 Demo annotation tool
 
 By 16th September:
-Attempt to run through Anoop’s timeline with bee data
+Attempt to run through Anoop’s pipeline with bee data
 
 By 30th September:
 Experiments defined, 
