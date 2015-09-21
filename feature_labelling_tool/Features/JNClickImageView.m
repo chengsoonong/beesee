@@ -15,7 +15,7 @@
     NSPoint startPoint, startPointInView;
 }
 - (instancetype)initWithFrame:(NSRect)frameRect {
-    if ([super initWithFrame:frameRect]) {
+    if (self = [super initWithFrame:frameRect]) {
         self.wantsLayer = YES;
         
         _imageLayer = [[CALayer alloc] init];
