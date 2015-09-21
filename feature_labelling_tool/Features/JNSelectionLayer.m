@@ -10,7 +10,7 @@
 
 @implementation JNSelectionLayer
 - (instancetype)init {
-    if ([super init]) {
+    if (self = [super init]) {
         CGColorRef color = CGColorCreateGenericRGB(0.0, 0.0, 1.0, 0.3);
         self.backgroundColor = color;
         CFRelease(color);

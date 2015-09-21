@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="15A278b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="15A282a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
     </dependencies>
     <objects>
@@ -16,7 +15,9 @@
             <connections>
                 <outlet property="button" destination="bDQ-FZ-nvw" id="wbd-l3-s4M"/>
                 <outlet property="clickImageViewWrapperView" destination="dpU-3t-hWm" id="a6x-xS-BvQ"/>
+                <outlet property="difficultCheckbox" destination="rze-dV-yBY" id="vKn-FV-XMJ"/>
                 <outlet property="label" destination="rpG-Eo-RD7" id="q6K-Km-gAY"/>
+                <outlet property="resetButton" destination="xNb-ii-1Xl" id="gnn-GP-1J2"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -151,7 +152,7 @@
                                     <constraint firstAttribute="height" constant="91" id="x8E-mJ-kzQ"/>
                                 </constraints>
                                 <animations/>
-                                <buttonCell key="cell" type="squareTextured" bezelStyle="texturedSquare" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Jkt-af-igR">
+                                <buttonCell key="cell" type="squareTextured" bezelStyle="texturedSquare" imagePosition="overlaps" alignment="center" enabled="NO" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Jkt-af-igR">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
@@ -159,13 +160,47 @@
                                     <action selector="buttonPressed:" target="Voe-Tx-rLC" id="VSk-Zo-1er"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xNb-ii-1Xl">
+                                <rect key="frame" x="14" y="13" width="180" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="Oow-Cx-4GW"/>
+                                    <constraint firstAttribute="width" constant="168" id="aqn-xg-dr2"/>
+                                </constraints>
+                                <animations/>
+                                <buttonCell key="cell" type="push" title="Reset Image" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ybc-BF-HOE">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="resetCurrentImage:" target="Voe-Tx-rLC" id="Q8M-MI-RPE"/>
+                                </connections>
+                            </button>
+                            <button translatesAutoresizingMaskIntoConstraints="NO" id="rze-dV-yBY">
+                                <rect key="frame" x="18" y="59" width="151" height="18"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="147" id="0VR-3W-NOQ"/>
+                                    <constraint firstAttribute="height" constant="14" id="4Jk-o2-XRA"/>
+                                </constraints>
+                                <animations/>
+                                <buttonCell key="cell" type="check" title="This image is difficult" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="OFq-uD-2tM">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="difficultyChanged:" target="Voe-Tx-rLC" id="agx-Ud-tqy"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="xNb-ii-1Xl" secondAttribute="trailing" constant="20" id="279-97-VU7"/>
                             <constraint firstAttribute="centerX" secondItem="bDQ-FZ-nvw" secondAttribute="centerX" id="2uy-Qq-fcq"/>
                             <constraint firstItem="rpG-Eo-RD7" firstAttribute="top" secondItem="CXy-B0-r1l" secondAttribute="top" constant="20" id="GyI-7F-n4q"/>
                             <constraint firstAttribute="centerX" secondItem="rpG-Eo-RD7" secondAttribute="centerX" constant="-0.5" id="HSC-Zu-XfI"/>
+                            <constraint firstAttribute="trailing" secondItem="rze-dV-yBY" secondAttribute="trailing" constant="41" id="MBi-bS-NBs"/>
+                            <constraint firstItem="xNb-ii-1Xl" firstAttribute="top" secondItem="rze-dV-yBY" secondAttribute="bottom" constant="20" id="Q4f-VC-3ek"/>
                             <constraint firstAttribute="width" constant="208" id="iQz-5n-RWN"/>
                             <constraint firstAttribute="centerY" secondItem="bDQ-FZ-nvw" secondAttribute="centerY" constant="0.5" id="reo-kb-eag"/>
+                            <constraint firstAttribute="bottom" secondItem="xNb-ii-1Xl" secondAttribute="bottom" constant="20" id="tfL-UT-jfF"/>
                         </constraints>
                         <animations/>
                     </customView>

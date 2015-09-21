@@ -12,8 +12,7 @@
 @interface AppDelegate : NSObject <NSApplicationDelegate, JNClickImageViewDelegate>
 @property IBOutlet JNClickImageViewWrapperView *clickImageViewWrapperView;
 @property IBOutlet NSTextField *label;
-@property IBOutlet NSButton *button;
-//- (IBAction)a:(id)sender;
-//- (void)startImage:(NSImage *)image name:(NSString *)name;
+@property IBOutlet NSButton *button, *resetButton, *difficultCheckbox;
 - (IBAction)newFile:(id)sender;
+- (IBAction)difficultyChanged:(NSButton *)sender;
 @end
