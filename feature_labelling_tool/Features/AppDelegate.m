@@ -23,6 +23,8 @@
     
     NSArray *features;
     NSUInteger currentFeatureIndex;
+    
+    NSString *basePath;
 }
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -75,7 +77,8 @@
 - (void)popNewImage {
     if (unlabelledImagePaths.count) {
         currImagePath = unlabelledImagePaths[0];
-        currImage = [[NSImage alloc] initWithContentsOfFile:[currImagePath stringByExpandingTildeInPath]];
+        NSString *absolutePath = [[basePath stringByAppendingPathComponent:currImagePath] stringByExpandingTildeInPath];
+        currImage = [[NSImage alloc] initWithContentsOfFile:absolutePath];
         self.clickImageViewWrapperView.image = currImage;
         self.clickImageViewWrapperView.clickImageView.mode = JNClickImageViewClickMode;
         
@@ -127,6 +130,10 @@
             NSPredicate *predicate = [NSPredicate predicateWithBlock:block];
             NSArray *nonemptyLines = [lines filteredArrayUsingPredicate:predicate];
             
+            NSArray <NSString *> *basePathComponents = [[panel.URLs[0] path] pathComponents];
+            basePath = [NSString pathWithComponents:[basePathComponents subarrayWithRange:NSMakeRange(0, basePathComponents.count-1)]];
+            NSLog(@"basePath: %@", basePath);
+            
             [self resume:@{ @"unlabelled" : [NSMutableArray arrayWithArray:nonemptyLines],
                             @"labelled"   : [NSMutableArray array]}];
         }
@@ -150,6 +157,11 @@
                               NSDictionary *JSONObject = [NSJSONSerialization JSONObjectWithData:fileData
                                                                                          options:NSJSONReadingMutableContainers
                                                                                            error:NULL];
+                              
+                              NSArray <NSString *> *basePathComponents = [[panel.URLs[0] path] pathComponents];
+                              basePath = [NSString pathWithComponents:[basePathComponents subarrayWithRange:NSMakeRange(0, basePathComponents.count-1)]];
+                              NSLog(@"basePath: %@", basePath);
+                              
                               [self resume:JSONObject];
                           }
                               break;
