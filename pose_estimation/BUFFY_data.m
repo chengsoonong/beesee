@@ -23,9 +23,9 @@ catch
 	posims    = 'BEES/images/set%d/%d.jpg';
 	labelfile = 'BEES/labels/set%d.mat';
   
-  trainsets = [2 3 4 5];   % training sets
-  testsets  = [2]; % testing  sets
-  trainfrs_neg = 615:1832;  % training frames for negative
+  trainsets = [1 2 4 5];   % training sets
+  testsets  = [2 3]; % testing  sets
+  trainfrs_neg = 1:2345;  % training frames for negative
   
   setlengths = [50 50 50 50 50];
 
@@ -82,7 +82,7 @@ catch
 
 	% -------------------
 	% grab neagtive image information
-	negims = 'INRIA/%.5d.jpg';
+	negims = 'NOBEES/%d.jpg';
 	neg = [];
 	numneg = 0;
 	for fr = trainfrs_neg
