@@ -1,17 +1,17 @@
 clc; close all; clear;
 globals;
-name = 'BUFFY';
+name = 'BEES';
 % --------------------
 % specify model parameters
 % number of mixtures for 18 parts
-% K = [6 6 6 6 6 6 6 6 6 6 ...
-%          6 6 6 6 6 6 6 6]; 
-K = [6 6 6 6 6 6 6 6 6 6]; 
+K = [6 6 6 6 6 6 6]; 
+% K  = [6 6 6 6 6 6 6 6 6 6 6 6 6];
 % Tree structure for 18 parts: pa(i) is the parent of part i
 % This structure is implicity assumed during data preparation
 % (BUFFY_data.m) and evaluation (BUFFY_eval_pcp)
-% pa = [0 1 2 3 4 5 6 3 8 9 2 11 12 13 14 11 16 17];
-pa = [0 1 2 3 2 5 4 6 3 5];
+pa = [   0    1    2    1    1    2    2];
+% %     head thrx abdm lant rant lwng rwng
+% pa = [0 1 2 3 4 1 1 3 8 9 3 11 12];
 % Spatial resolution of HOG cell, interms of pixel width and hieght
 % The BUFFY dataset contains low-res people, so we use low-res parts
 sbin = 8;
@@ -58,7 +58,7 @@ figure(2);
 visualizeskeleton(model);
 demoimid = 1;
 im  = imread(test(demoimid).im);
-colorset = {'g','g','y','r','r','y','y','b','b','y'};
+colorset = {'g','r','b','y','g','r','b'};
 box = boxes{demoimid};
 % show all detections
 figure(3);
