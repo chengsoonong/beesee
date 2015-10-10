@@ -22,7 +22,7 @@ def labels_json_to_plots(labels_json_name, options):
         json_data = json.load(f)['labelled']
 
     parts = ['head', 'thorax', 'abdomen', 'left antenna', 'right antenna',
-        'left wing', 'right antenna']
+        'left wing', 'right wing']
 
     return [Plot(os.path.join(os.path.split(labels_json_name)[0], i['path']),
         [i[p][0] for p in parts if i[p] is not None],
@@ -30,14 +30,22 @@ def labels_json_to_plots(labels_json_name, options):
         for i in json_data]
 
 def labels_mat_to_plots(labels_mat_name, options):
-    print(options)
+    raise NotImplementedError()
 
 def pred_to_plots(pred_name, options):
-    image_detections = scipy.io.loadmat(mat_file_name)['boxes']
-    image_top_detections = [max(x, key=lambda y: y[-1])
-        for x in image_detections]
+    image_detections = scipy.io.loadmat(pred_name)['boxes']
+    image_plots = []
+    for image in image_detections:
+        plot = Plot(image_name, [], [])
+        image_top_detections = [max(x, key=lambda y: y[-1])
+            for x in image]
 
-    return [Plot()]
+        partnum = (image_top_detections[0] - 2) // 4
+        for i in range(partnum):
+            pass
+        image_plots.append(plot)
+    return image_plots
+
 
 format_functions = {'labels_json' : labels_json_to_plots,
     'labels_mat' : labels_mat_to_plots,
