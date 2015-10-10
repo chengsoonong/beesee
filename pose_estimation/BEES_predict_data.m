@@ -1,18 +1,4 @@
 function [predict] = BUFFY_data(name)
-% this function is very dataset specific, you need to modify the code if
-% you want to apply the pose algorithm on some other dataset
-
-% it converts the various data format of different dataset into unique
-% format for pose detection 
-% the unique format for pose detection contains below data structure
-%   pos:
-%     pos(i).im: filename for the image containing i-th human 
-%     pos(i).point: pose keypoints for the i-th human
-%   neg:
-%     neg(i).im: filename for the image contraining no human
-%   test:
-%     test(i).im: filename for i-th testing image
-% This function also prepares flipped images and slightly rotated images for training.
 
 BEES_globals;
 

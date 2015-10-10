@@ -5,8 +5,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 import json
-import os.path
+import os, os.path
 import scipy.io
+from detection_reader import Results
 
 class Plot(object):
     def __init__(self, image_path, x, y):
@@ -33,19 +34,17 @@ def labels_mat_to_plots(labels_mat_name, options):
     raise NotImplementedError()
 
 def pred_to_plots(pred_name, options):
-    image_detections = scipy.io.loadmat(pred_name)['boxes']
-    image_plots = []
-    for image in image_detections:
-        plot = Plot(image_name, [], [])
-        image_top_detections = [max(x, key=lambda y: y[-1])
-            for x in image]
-
-        partnum = (image_top_detections[0] - 2) // 4
-        for i in range(partnum):
-            pass
-        image_plots.append(plot)
-    return image_plots
-
+    image_files = sorted(os.listdir(options['directory']),
+        key=lambda x: int(x.split('.')[0]))
+    first = options['first']-1 if 'first' in options else 0
+    image_results = Results(pred_name).image_results[first:]
+    top_results = [max(x.detections, key=lambda y: y.score)
+        for x in image_results]
+    return [Plot(os.path.join(options['directory'], image_files[i]),
+        [x.centre[0] for x in top_results[i].rectangles],
+        [x.centre[1] for x in top_results[i].rectangles])
+        for i in range(len(top_results))
+        if i < len(image_files)]
 
 format_functions = {'labels_json' : labels_json_to_plots,
     'labels_mat' : labels_mat_to_plots,
@@ -85,13 +84,17 @@ def main():
     parser.add_argument('data_format', type=str, help='input file format',
         choices=sorted(format_functions.keys()))
     parser.add_argument('file_name', type=str, help='input file name')
-    parser.add_argument("-e", "--episodes", type=str,
-                    help="comma-separated episodes in .mat file")
+    parser.add_argument("-d", "--directory", type=str,
+                    help="images directory")
+    parser.add_argument("-f", "--first", type=int,
+                    help="index of first image to show")
     args = parser.parse_args()
 
     options = {}
-    if args.episodes is not None:
-        options['episodes'] = [int(i) for i in args.episodes.split(',')]
+    if args.directory is not None:
+        options['directory'] = args.directory
+    if args.first is not None:
+        options['first'] = args.first
 
     plots = format_functions[args.data_format](args.file_name, options)
     controller = PltController(plots)
