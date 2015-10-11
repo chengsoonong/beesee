@@ -1,4 +1,4 @@
-function [pos neg test] = BUFFY_data(name)
+function [pos neg] = BUFFY_train_data(name)
 % this function is very dataset specific, you need to modify the code if
 % you want to apply the pose algorithm on some other dataset
 
@@ -14,20 +14,14 @@ function [pos neg test] = BUFFY_data(name)
 %     test(i).im: filename for i-th testing image
 % This function also prepares flipped images and slightly rotated images for training.
 
-globals;
+BEES_globals;
 
-cls = [name '_data'];
+cls = [name '_train_data'];
 try
 	load([cachedir cls]);
 catch
-	posims    = 'BEES/images/set%d/%d.jpg';
-	labelfile = 'BEES/labels/set%d.mat';
-  
   trainsets = [1 2 4 5];   % training sets
-  testsets  = [2 3]; % testing  sets
   trainfrs_neg = 1:2345;  % training frames for negative
-  
-  setlengths = [50 50 50 50 50];
 
   % -------------------
   % grab positive annotation and image information
@@ -44,11 +38,11 @@ catch
 
   % -------------------
   % flip positive training images
-  posims_flip = [cachedir 'imflip/BEES%.6d.jpg'];
-  for n = 1:length(pos)
-    im = imread(pos(n).im);
-    imwrite(im(:,end:-1:1,:),sprintf(posims_flip,n));
-  end
+%   posims_flip = [cachedir 'imflip/BEES%.6d.jpg'];
+%   for n = 1:length(pos)
+%     im = imread(pos(n).im);
+%     imwrite(im(:,end:-1:1,:),sprintf(posims_flip,n));
+%   end
 
   % -------------------
   % flip labels for the flipped positive training images
@@ -89,21 +83,6 @@ catch
     numneg = numneg + 1;
     neg(numneg).im = sprintf(negims,fr);
 	end
-  
-	% -------------------
-  % grab testing image information
-  test = [];
-  numtest = 0;
-  for e = testsets
-    load(sprintf(labelfile,e));
-    for n = 1:setlengths(e)
-      numtest = numtest + 1;
-      test(numtest).epi = e;
-      test(numtest).frame = n
-      test(numtest).im = sprintf(posims,e,n);
-      test(numtest).point = labels(:,:,n);
-    end
-  end
 
-	save([cachedir cls],'pos','neg','test');
+	save([cachedir cls],'pos','neg');
 end
