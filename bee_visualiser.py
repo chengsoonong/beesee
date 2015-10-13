@@ -15,9 +15,6 @@ class Plot(object):
         self.x = x
         self.y = y
 
-    def __repr__(self):                                                         # d
-        return self.__dict__.__repr__()                                         # d
-
 def labels_json_to_plots(labels_json_name, options):
     with open(labels_json_name) as f:
         json_data = json.load(f)['labelled']
@@ -31,16 +28,29 @@ def labels_json_to_plots(labels_json_name, options):
         for i in json_data]
 
 def labels_mat_to_plots(labels_mat_name, options):
-    raise NotImplementedError()
+    image_files = [os.path.join(options.directory, x)
+        for x in sorted([y for y in os.listdir(options.directory)
+                if y.split('.')[-1].lower() == 'jpg'],
+            key=lambda x: int(x.split('.')[0]))]
+    label_array = scipy.io.loadmat(labels_mat_name)['labels']
+    return [Plot(image_files[i],
+        list(label_array[:,0,i]),
+        list(label_array[:,1,i]))
+        for i in range(label_array.shape[2])
+        if i < len(image_files)]
 
 def pred_to_plots(pred_name, options):
-    image_files = sorted(os.listdir(options['directory']),
-        key=lambda x: int(x.split('.')[0]))
-    first = options['first']-1 if 'first' in options else 0
+    image_files = [os.path.join(options.directory, x)
+        for x in sorted([y for y in os.listdir(options.directory)
+                if y.split('.')[-1].lower() == 'jpg'],
+            key=lambda x: int(x.split('.')[0]))]
+    first = options.first-1 if options.first is not None else 0
     image_results = Results(pred_name).image_results[first:]
-    top_results = [max(x.detections, key=lambda y: y.score)
-        for x in image_results]
-    return [Plot(os.path.join(options['directory'], image_files[i]),
+    # image_result = Results(pred_name).image_results[-1]
+    # print(image_result.detections)
+    # raise NotImplementedError()
+    top_results = [x.detections[0]for x in image_results]
+    return [Plot(image_files[i],
         [x.centre[0] for x in top_results[i].rectangles],
         [x.centre[1] for x in top_results[i].rectangles])
         for i in range(len(top_results))
@@ -90,13 +100,7 @@ def main():
                     help="index of first image to show")
     args = parser.parse_args()
 
-    options = {}
-    if args.directory is not None:
-        options['directory'] = args.directory
-    if args.first is not None:
-        options['first'] = args.first
-
-    plots = format_functions[args.data_format](args.file_name, options)
+    plots = format_functions[args.data_format](args.file_name, args)
     controller = PltController(plots)
 
 if __name__ == '__main__':
