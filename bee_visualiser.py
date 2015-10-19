@@ -3,17 +3,23 @@ if __import__('platform').system() == 'Darwin':
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.markers as markers
 import argparse
 import json
 import os, os.path
 import scipy.io
 from detection_reader import Results
 
+markers = {7: ['o', 'o', 'o', '<', '>', '<', '>'], 3: ['o','o','o']}
+colours = {7: ['r', 'g', 'b', 'c', 'c' ,'y', 'y'], 3: ['r','g','b']}
+
 class Plot(object):
-    def __init__(self, image_path, x, y):
+    def __init__(self, image_path, x, y, amarkers=None, acolours=None):
         self.image_path = image_path
         self.x = x
         self.y = y
+        self.markers = len(x)*['o'] if amarkers is None else amarkers
+        self.colours = len(x)*['b'] if acolours is None else acolours
 
 def labels_json_to_plots(labels_json_name, options):
     with open(labels_json_name) as f:
@@ -46,13 +52,12 @@ def pred_to_plots(pred_name, options):
             key=lambda x: int(x.split('.')[0]))]
     first = options.first-1 if options.first is not None else 0
     image_results = Results(pred_name).image_results[first:]
-    # image_result = Results(pred_name).image_results[-1]
-    # print(image_result.detections)
-    # raise NotImplementedError()
     top_results = [x.detections[0]for x in image_results]
     return [Plot(image_files[i],
         [x.centre[0] for x in top_results[i].rectangles],
-        [x.centre[1] for x in top_results[i].rectangles])
+        [x.centre[1] for x in top_results[i].rectangles],
+        markers[len(top_results[i].rectangles)] if len(top_results[i].rectangles) in markers else None,
+        colours[len(top_results[i].rectangles)] if len(top_results[i].rectangles) in colours else None)
         for i in range(len(top_results))
         if i < len(image_files)]
 
@@ -70,7 +75,11 @@ class PltController(object):
         im = plt.imread(self.plots[self.curr_pos].image_path)
         self.ax = self.fig.add_subplot(111)
         implot = self.ax.imshow(im)
-        self.ax.scatter(self.plots[self.curr_pos].x, self.plots[self.curr_pos].y)
+        for i in range(len(self.plots[self.curr_pos].x)):
+            self.ax.scatter([self.plots[self.curr_pos].x[i]],
+                [self.plots[self.curr_pos].y[i]],
+                marker=self.plots[self.curr_pos].markers[i],
+                color=self.plots[self.curr_pos].colours[i])
         plt.show()
 
     def key_event(self, e):
@@ -84,8 +93,11 @@ class PltController(object):
             self.ax.cla()
             im = plt.imread(self.plots[self.curr_pos].image_path)
             implot = self.ax.imshow(im)
-            self.ax.scatter(self.plots[self.curr_pos].x,
-                self.plots[self.curr_pos].y)
+            for i in range(len(self.plots[self.curr_pos].x)):
+                self.ax.scatter([self.plots[self.curr_pos].x[i]],
+                    [self.plots[self.curr_pos].y[i]],
+                    marker=self.plots[self.curr_pos].markers[i],
+                    color=self.plots[self.curr_pos].colours[i])
             self.fig.canvas.draw()
 
 def main():
