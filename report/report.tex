@@ -1,0 +1,103 @@
+\documentclass[11pt, oneside]{article}
+\usepackage{geometry}
+\geometry{a4paper}
+\usepackage{amsmath}
+\usepackage{mathspec}  
+\setmainfont [Ligatures={Common,TeX}, Numbers={OldStyle}]{Palatino Linotype} 
+\setmonofont[Scale=0.85]{Menlo}
+\usepackage{enumitem}
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{pgfplots}
+\hypersetup{linktoc=all}
+
+\renewcommand{\abstractname}{Abstract}
+
+
+
+\title{asdf}
+\author{Jakub Nabaglo, u5558578}
+\date{Semester 2, 2015}
+
+\begin{document}
+\maketitle
+
+\section{The BEES Dataset}
+The BEES dataset was developed for this project. It is composed of 640
+photographs displaying bees of various species in diverse positions.
+
+Each photograph in the BEES dataset displays one bee. The bee is labelled with
+the position of the middle of its head, thorax, and abdomen, as well as the
+tip of its right wing, left wing, right antenna and left antenna. However, in
+the case that one of these bee parts is occluded, no position is listed for
+that part. Difficult images were also tagged.
+
+\section{Experiment}
+Experiments to perform bee pose estimation were conducted on the BEES dataset.
+From the BEES dataset, 250 images with all seven parts labelled were selected
+and split into five sets of 50. Of these, four were used for training and one
+was used for testing. The images in BEES deemed unsuitable for use in
+experiments due to bee part occlusions were used as a basis for a negative
+training set: bees were cropped out of these images, leaving only the
+background.
+
+The algorithm described by Yang and Ramanan (2011) was used as a basis for the
+experiments. A tree structure was defined on the seven bee parts labelled in
+BEES, with the head as the root; the antennae and the thorax as children of
+the head; and the wings and the abdomen as children of the thorax.
+
+Following training on the four training sets, predictions were made on the
+testing set. The testing set predictions were then displayed and visually
+inspected for correctness and accuracy.
+
+\section{Literature Review}
+
+Santana et al. (2014) have performed automated bee classification based on
+bee wing images labelled with the bee species and annotated with landmarks.
+Their process extracts wing features such as `vein length, width, curvature,
+angles and the area of all cells' (Santana et al, 2014, p. 253) that may be
+input into a generic classifier.
+
+Their approach presents several problems. In order to reliably extract features,
+the training and testing photographs must be captured in a highly uniform
+manner: the wing images must be of a high resolution and have a plain white
+background. If the goal is to enable amateurs to photograph bees and
+automatically classify them, the user cannot be expected to possess the
+equipment or motivation necessary for such consistent specimen collection.
+
+Further, in the work of Santana et al. (2014), images used for training and
+prediction must be annotated with landmarks before relevant features can be
+extracted. This, again, is not something an an amateur user should be expected
+to do.
+
+As such, it is necessary to develop a method to classify bees regarding of their
+position or orientation in the image, without requiring the user to take the
+photograph in a particular way, and not necessitating that they annotate
+landmarks. It is a logical first step to train a machine to detect the pose of
+the bee, as well as the bee parts useful for classification.
+
+Yang and Ramanan (2011) describe a model for human pose estimation. It is a
+supervised learning model that trains on photographs of humans that are
+annotated with positions of their body parts. In addition, a tree model must
+be defined on these parts. The tree is used in a graphical model to take
+advantage of relationships between body parts during training and detection.
+
+Although their work describes human pose estimation, it may conceivably be
+applied to bee pose estimation. Challenges may include the small size of some
+bee parts, such as antennae or legs, as well as the tendency for bee images to
+occlude parts: these may lower the accuracy of part detections. Large
+variations in bee poses may also be problematic, as this reduces the utility of
+the graphical model.
+
+
+\section{References}
+[1] Y. Yang, D. Ramanan. Articulated Pose Estimation using Flexible Mixtures of Parts. CVPR 2011.
+
+[2] http://www.stat.ucla.edu/~xianjie.chen/projects/pose\_estimation/pose\_estimation.html
+
+[3] http://www.pcs.usp.br/~lti/joomla/index.php?option=com\_content\&view=article\&id=23\&Itemid=14
+
+
+\end{document}
