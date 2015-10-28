@@ -13,26 +13,24 @@ from detection_reader import Results
 markers = {7: ['o', 'o', 'o', '<', '>', '<', '>'], 3: ['o','o','o']}
 colours = {7: ['r', 'g', 'b', 'c', 'c' ,'y', 'y'], 3: ['r','g','b']}
 
-parts = ['head', 'thorax', 'abdomen', 'left antenna', 'right antenna',
-    'left wing', 'right wing']
-
 class Plot(object):
-    def __init__(self, image_path, x, y, amarkers=None, acolours=None, labels=None):
+    def __init__(self, image_path, x, y, amarkers=None, acolours=None):
         self.image_path = image_path
         self.x = x
         self.y = y
         self.markers = len(x)*['o'] if amarkers is None else amarkers
         self.colours = len(x)*['b'] if acolours is None else acolours
-        self.labels = labels
 
 def labels_json_to_plots(labels_json_name, options):
     with open(labels_json_name) as f:
         json_data = json.load(f)['labelled']
 
+    parts = ['head', 'thorax', 'abdomen', 'left antenna', 'right antenna',
+        'left wing', 'right wing']
+
     return [Plot(os.path.join(os.path.split(labels_json_name)[0], i['path']),
         [i[p][0] for p in parts if i[p] is not None],
-        [i['size'][1]-i[p][1] for p in parts if i[p] is not None],
-        markers[7], colours[7], parts)
+        [i['size'][1]-i[p][1] for p in parts if i[p] is not None])
         for i in json_data]
 
 def labels_mat_to_plots(labels_mat_name, options):
@@ -56,10 +54,10 @@ def pred_to_plots(pred_name, options):
     image_results = Results(pred_name).image_results[first:]
     top_results = [x.detections[0]for x in image_results]
     return [Plot(image_files[i],
-        [x.centre[0] for x in top_results[i].rectangles],
-        [x.centre[1] for x in top_results[i].rectangles],
-        markers[len(top_results[i].rectangles)] if len(top_results[i].rectangles) in markers else None,
-        colours[len(top_results[i].rectangles)] if len(top_results[i].rectangles) in colours else None)
+        [x.centre[0] for x in top_results[i].rectangles[0:3]],
+        [x.centre[1] for x in top_results[i].rectangles][0:3],
+        markers[len(top_results[i].rectangles)] if len(top_results[i].rectangles[0:3]) in markers else None,
+        colours[len(top_results[i].rectangles)] if len(top_results[i].rectangles[0:3]) in colours else None)
         for i in range(len(top_results))
         if i < len(image_files)]
 
@@ -81,9 +79,7 @@ class PltController(object):
             self.ax.scatter([self.plots[self.curr_pos].x[i]],
                 [self.plots[self.curr_pos].y[i]],
                 marker=self.plots[self.curr_pos].markers[i],
-                color=self.plots[self.curr_pos].colours[i],
-                label=self.plots[self.curr_pos].labels[i])
-        plt.legend(scatterpoints=1)
+                color=self.plots[self.curr_pos].colours[i])
         plt.show()
 
     def key_event(self, e):
@@ -101,9 +97,7 @@ class PltController(object):
                 self.ax.scatter([self.plots[self.curr_pos].x[i]],
                     [self.plots[self.curr_pos].y[i]],
                     marker=self.plots[self.curr_pos].markers[i],
-                    color=self.plots[self.curr_pos].colours[i],
-                    label=self.plots[self.curr_pos].labels[i])
-            plt.legend(scatterpoints=1)
+                    color=self.plots[self.curr_pos].colours[i])
             self.fig.canvas.draw()
 
 def main():
