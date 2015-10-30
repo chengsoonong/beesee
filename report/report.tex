@@ -564,16 +564,108 @@
             \end{minipage}
         \end{figure}
 
-    \begin{itemize}
-    \item
-        \comment{3 vs 7 part model}
-    \item
-        \comment{w or without augmentation}
-    \item
-        \comment{comparison to human performance}
-    \item
-        \comment{average emitting thing}
-    \end{itemize}
+        \begin{figure}[p]
+            \centering
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog4_1.pdf}
+                \caption{Three-part model}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{7p_1.pdf}
+                \caption{Seven-part model}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{7pgt_1.pdf}
+                \caption{Ground truth}
+            \end{subfigure}
+            \hspace{0.1\textwidth}\raisebox{15ex}{\framebox[0.25\textwidth]{
+                \begin{tabular}{c l}
+                {\legends\color{red}{\rotatebox[origin=c]{0}{▲}}}&Head\\
+                {\legends\color{green}{●}}&Thorax\\
+                {\legends\color{blue}{\rotatebox[origin=c]{180}{▲}}}&Abdomen\\
+                {\legends\color{cyan}{\rotatebox[origin=c]{90}{▲}}}&Left Wing\\
+                {\legends\color{cyan}{\rotatebox[origin=c]{270}{▲}}}&Right Wing\\
+                {\legends\color{yellow}{\rotatebox[origin=c]{90}{▲}}}&Left Antenna\\
+                {\legends\color{yellow}{\rotatebox[origin=c]{270}{▲}}}&Right Antenna
+                \end{tabular}
+            }}\hspace{0.1\textwidth}
+            \caption{Predictions on sample test image by number of parts in model}
+            \label{fig:hog_vis1}
+        \end{figure}
+
+        \begin{figure}[p]
+            \centering
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog4_2.pdf}
+                \caption{Three-part model}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{7p_2.pdf}
+                \caption{Seven-part model}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{7pgt_2.pdf}
+                \caption{Ground truth}
+            \end{subfigure}
+            \hspace{0.1\textwidth}\raisebox{15ex}{\framebox[0.25\textwidth]{
+                \begin{tabular}{c l}
+                {\legends\color{red}{\rotatebox[origin=c]{0}{▲}}}&Head\\
+                {\legends\color{green}{●}}&Thorax\\
+                {\legends\color{blue}{\rotatebox[origin=c]{180}{▲}}}&Abdomen\\
+                {\legends\color{cyan}{\rotatebox[origin=c]{90}{▲}}}&Left Wing\\
+                {\legends\color{cyan}{\rotatebox[origin=c]{270}{▲}}}&Right Wing\\
+                {\legends\color{yellow}{\rotatebox[origin=c]{90}{▲}}}&Left Antenna\\
+                {\legends\color{yellow}{\rotatebox[origin=c]{270}{▲}}}&Right Antenna
+                \end{tabular}
+            }}\hspace{0.1\textwidth}
+            \caption{Predictions on sample test image by number of parts in model}
+            \label{fig:hog_vis1}
+        \end{figure}
+
+        \begin{figure}[p]
+            \centering
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog4_3.pdf}
+                \caption{Three-part model}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{7p_3.pdf}
+                \caption{Seven-part model}
+            \end{subfigure}\\
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{7pgt_3.pdf}
+                \caption{Ground truth}
+            \end{subfigure}
+            \hspace{0.1\textwidth}\raisebox{15ex}{\framebox[0.25\textwidth]{
+                \begin{tabular}{c l}
+                {\legends\color{red}{\rotatebox[origin=c]{0}{▲}}}&Head\\
+                {\legends\color{green}{●}}&Thorax\\
+                {\legends\color{blue}{\rotatebox[origin=c]{180}{▲}}}&Abdomen\\
+                {\legends\color{cyan}{\rotatebox[origin=c]{90}{▲}}}&Left Wing\\
+                {\legends\color{cyan}{\rotatebox[origin=c]{270}{▲}}}&Right Wing\\
+                {\legends\color{yellow}{\rotatebox[origin=c]{90}{▲}}}&Left Antenna\\
+                {\legends\color{yellow}{\rotatebox[origin=c]{270}{▲}}}&Right Antenna
+                \end{tabular}
+            }}\hspace{0.1\textwidth}
+            \caption{Predictions on sample test image by number of parts in model}
+            \label{fig:hog_vis1}
+        \end{figure}
+
+    \section{Data augmentation}
+        \comment{WRITE}
+
+        \comment{GRAPH}
+
+        \comment{VISUALISATION}
 
 \chapter{Future direction}
     \begin{itemize}
@@ -619,7 +711,8 @@ International Journal of Computer Vision, vol. 88, no. 2, pp. 303–
 \end{figure}
 
 \chapter{Labelling tool}
-    \comment{WRITE}
+    In the process of developing the BEES dataset, a GUI labelling tool was written. The tool guides the user through the process of labelling all images in the set. Upon reading a list of file names, images appear on the screen one by one and the user is asked to click on bee parts in order to mark them. The user may also declare the part occluded, as well as mark the entire image as difficult. Progress may be saved to and restored from file. The end output is a JSON file specifying image file names, image sizes, part positions or lack thereof, and difficult image flags. A screenshot of the tool is shown in figure \ref{fig:Labelling_screenshot}.
+
     \begin{figure}[h]
         \centering
         \includegraphics[width=\textwidth]{features_tool.png}\hfill
@@ -629,21 +722,18 @@ International Journal of Computer Vision, vol. 88, no. 2, pp. 303–
 
 \chapter{Python scripts}
     \section{Visualisation tool}
-        \comment{WRITE}
         \begin{figure}[h]
             \centering
             \includegraphics[width=\textwidth]{visualisation_tool.png}\hfill
             \caption{The visualisation tool}
             \label{fig:Visualisation_screenshot}
         \end{figure}
+        A visualisation tool was develop to aid in debugging code, observing performance, and developing visualisations for publication. It is able to visualise predictions, labels that are input into the Matlab code, as well labels in a JSON file. The images are read and overlaid with marked parts. A legend is provided. A screenshot is shown in figure \ref{fig:Visualisation_screenshot}.
 
     \section{Shuffling tool}
         \comment{WRITE}
     
-    \section{Conversion to .mat tool}
-        \comment{WRITE}
-    
     \section{Results reader}
-        \comment{WRITE}
+        A Python class was developed that provides an interface for reading the results of Matlab predictions. It reads the Matlab files output by the prediction code and converts them into Python objects. It is used in the Visualisation Tool, but also available for import as a standalone module.
 
 \end{document}
