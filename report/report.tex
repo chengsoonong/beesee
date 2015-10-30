@@ -17,11 +17,13 @@
 \usepackage{setspace}
 \usepackage{wrapfig}
 \usepackage{tikz}
+\usepackage{subcaption}
 
 
 \newcommand{\comment}[1]{\textcolor{red}{#1}}
 \newcommand{\pcomment}[1]{\textcolor{green}{#1}}
 \DeclareMathOperator*{\argmin}{argmin}
+\newfontfamily\legends{Arial}
 
 \linespread{1.2}
 
@@ -169,6 +171,7 @@
 
 \chapter{Results}
     \section{HOG cell size}
+        \comment{WRITE}
         \begin{figure}
             \centering
             \begin{minipage}{0.48\textwidth}
@@ -177,7 +180,7 @@
                         \begin{axis}[width=\textwidth,
                             xlabel=Size of HOG cell,
                             ylabel=Probability of Correct Keypoint (\%)]
-                        \addplot[only marks,color=red,mark=o] coordinates {
+                        \addplot[only marks,color=red,mark=triangle*] coordinates {
                             ( 3, 60)
                             ( 4, 63)
                             ( 5, 59)
@@ -187,7 +190,7 @@
                             ( 12, 5)
                             ( 16, 14)
                         };
-                        \addplot[only marks,color=blue,mark=o] coordinates {
+                        \addplot[only marks,color=green,mark=*] coordinates {
                             ( 3, 60)
                             ( 4, 70)
                             ( 5, 65)
@@ -197,7 +200,7 @@
                             ( 12, 28)
                             ( 16, 28)
                         };
-                        \addplot[only marks,color=green,mark=o] coordinates {
+                        \addplot[only marks,color=blue,mark=triangle*, mark options={rotate=180}] coordinates {
                             ( 3, 51)
                             ( 4, 50)
                             ( 5, 43)
@@ -207,7 +210,7 @@
                             ( 12, 7)
                             ( 16, 12)
                         };
-                        \addplot[only marks,color=black,mark=o] coordinates {
+                        \addplot[only marks,color=black,mark=square*] coordinates {
                             ( 3, 57)
                             ( 4, 61)
                             ( 5, 55.7)
@@ -221,7 +224,7 @@
                         \end{axis}
                     \end{tikzpicture}
                 \caption{PCK by HOG cell size for the three-part model}
-                \label{fig:3part_graph}
+                \label{fig:hog_pck}
             \end{minipage}\hfill
             \begin{minipage}{0.48\textwidth}
                 \centering
@@ -229,7 +232,7 @@
                     \begin{axis}[width=\textwidth,
                         xlabel=Size of HOG cell,
                         ylabel=Average Precision of Keypoints (\%)]
-                    \addplot[only marks,color=red,mark=o] coordinates {
+                    \addplot[only marks,color=red,mark=triangle*] coordinates {
                         ( 3, 45.2)
                         ( 4, 56.2)
                         ( 5, 51.2)
@@ -239,7 +242,7 @@
                         ( 12, 7.3)
                         ( 16, 9.4)
                     };
-                    \addplot[only marks,color=blue,mark=o] coordinates {
+                    \addplot[only marks,color=green,mark=*] coordinates {
                         ( 3, 50.3)
                         ( 4, 56.2)
                         ( 5, 53.3)
@@ -249,7 +252,7 @@
                         ( 12, 10.6)
                         ( 16, 16.5)
                     };
-                    \addplot[only marks,color=green,mark=o] coordinates {
+                    \addplot[only marks,color=blue,mark=triangle*, mark options={rotate=180}] coordinates {
                         ( 3, 38.5)
                         ( 4, 46.5)
                         ( 5, 33.2)
@@ -259,7 +262,7 @@
                         ( 12, 5.6)
                         ( 16, 8.7)
                     };
-                    \addplot[only marks,color=black,mark=o] coordinates {
+                    \addplot[only marks,color=black,mark=square*] coordinates {
                         ( 3, 44.7)
                         ( 4, 53)
                         ( 5, 45.9)
@@ -273,14 +276,295 @@
                     \end{axis}
                 \end{tikzpicture}
                 \caption{APK by HOG cell size for the three-part model}
-                \label{fig:7part_graph}
+                \label{fig:hog_apk}
             \end{minipage}
         \end{figure}
-        
+
+        \begin{figure}[p]
+            \centering
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog3_1.pdf}
+                \caption{$3\times3$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog4_1.pdf}
+                \caption{$4\times4$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog5_1.pdf}
+                \caption{$5\times5$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog6_1.pdf}
+                \caption{$6\times6$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog8_1.pdf}
+                \caption{$8\times8$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog10_1.pdf}
+                \caption{$10\times10$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog12_1.pdf}
+                \caption{$12\times12$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog16_1.pdf}
+                \caption{$16\times16$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog_gt1.pdf}
+                \caption{Ground truth}
+            \end{subfigure}
+
+            \hspace{0pt}
+
+            \begin{subfigure}[b]{0.2\textwidth}
+                \centering
+                \fbox{\begin{minipage}{\textwidth}
+                    \begin{tabular}{c l}
+                    {\legends\color{red}{\rotatebox[origin=c]{0}{▲}}}&Head\\
+                    {\legends\color{green}{●}}&Thorax\\
+                    {\legends\color{blue}{\rotatebox[origin=c]{180}{▲}}}&Abdomen
+                    \end{tabular}
+                \end{minipage}}
+            \end{subfigure}
+            \caption{Three-part model predictions on sample test image by HOG cell size}
+            \label{fig:hog_vis1}
+        \end{figure}
+
+        \begin{figure}[p]
+            \centering
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog3_2.pdf}
+                \caption{$3\times3$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog4_2.pdf}
+                \caption{$4\times4$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog5_2.pdf}
+                \caption{$5\times5$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog6_2.pdf}
+                \caption{$6\times6$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog8_2.pdf}
+                \caption{$8\times8$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog10_2.pdf}
+                \caption{$10\times10$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog12_2.pdf}
+                \caption{$12\times12$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog16_2.pdf}
+                \caption{$16\times16$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog_gt2.pdf}
+                \caption{Ground truth}
+            \end{subfigure}
+
+            \hspace{0pt}
+
+            \begin{subfigure}[b]{0.2\textwidth}
+                \centering
+                \fbox{\begin{minipage}{\textwidth}
+                    \begin{tabular}{c l}
+                    {\legends\color{red}{\rotatebox[origin=c]{0}{▲}}}&Head\\
+                    {\legends\color{green}{●}}&Thorax\\
+                    {\legends\color{blue}{\rotatebox[origin=c]{180}{▲}}}&Abdomen
+                    \end{tabular}
+                \end{minipage}}
+            \end{subfigure}
+            \caption{Three-part model predictions on sample test image by HOG cell size}
+            \label{fig:hog_vis1}
+        \end{figure}
+
+        \begin{figure}[p]
+            \centering
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog3_3.pdf}
+                \caption{$3\times3$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog4_3.pdf}
+                \caption{$4\times4$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog5_3.pdf}
+                \caption{$5\times5$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog6_3.pdf}
+                \caption{$6\times6$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog8_3.pdf}
+                \caption{$8\times8$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog10_3.pdf}
+                \caption{$10\times10$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog12_3.pdf}
+                \caption{$12\times12$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog16_3.pdf}
+                \caption{$16\times16$ HOG cells}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{hog_gt3.pdf}
+                \caption{Ground truth}
+            \end{subfigure}
+
+            \hspace{0pt}
+
+            \begin{subfigure}[b]{0.2\textwidth}
+                \centering
+                \fbox{\begin{minipage}{\textwidth}
+                    \begin{tabular}{c l}
+                    {\legends\color{red}{\rotatebox[origin=c]{0}{▲}}}&Head\\
+                    {\legends\color{green}{●}}&Thorax\\
+                    {\legends\color{blue}{\rotatebox[origin=c]{180}{▲}}}&Abdomen
+                    \end{tabular}
+                \end{minipage}}
+            \end{subfigure}
+            \caption{Three-part model predictions on sample test image by HOG cell size}
+            \label{fig:hog_vis1}
+        \end{figure}
+    \section{Comparison of 3-part vs 7-part models}
+        \begin{figure}
+            \centering
+            \begin{minipage}{0.48\textwidth}
+                \centering
+                    \begin{tikzpicture}
+                        \begin{axis}[width=\textwidth,
+                            xlabel=Number of parts in model,
+                            ylabel=Probability of Correct Keypoint (\%)]
+                        \addplot[only marks,color=red,mark=triangle*] coordinates {
+                            ( 3, 63)
+                            ( 7, 63)
+                        };
+                        \addplot[only marks,color=green,mark=*] coordinates {
+                            ( 3, 70)
+                            ( 7, 64)
+                        };
+                        \addplot[only marks,color=blue,mark=triangle*, mark options={rotate=180}] coordinates {
+                            ( 3, 50)
+                            ( 7, 56)
+                        };
+                        \addplot[only marks,color=cyan,mark=triangle*, mark options={rotate=90}] coordinates {
+                            ( 7, 28)
+                        };
+                        \addplot[only marks,color=cyan,mark=triangle*, mark options={rotate=270}] coordinates {
+                            ( 7, 22)
+                        };
+                        \addplot[only marks,color=yellow,mark=halfsquare left*] coordinates {
+                            ( 7, 28)
+                        };
+                        \addplot[only marks,color=yellow,mark=halfsquare right*] coordinates {
+                            ( 7, 25)
+                        };
+                        \addplot[only marks,color=black,mark=square*] coordinates {
+                            ( 3, 61)
+                            ( 7, 61)
+                        };
+                        \addplot[only marks,color=black,mark=square, mark options={rotate=180}] coordinates {
+                            ( 7, 40.9)
+                            (11, 60)
+                        };
+                        \legend{Head, Thorax, Abdomen, L Wing, R Wing, L Antenna, R Antenna, Mean (3p), Mean (7p)}
+                        \end{axis}
+                    \end{tikzpicture}
+                \caption{PCK by parts in model for HOG cell size 4}
+                \label{fig:hog_pck}
+            \end{minipage}\hfill
+            \begin{minipage}{0.48\textwidth}
+                \centering
+                \begin{tikzpicture}
+                    \begin{axis}[width=\textwidth,
+                        xlabel=Number of parts in model,
+                        ylabel=Average Precision of Keypoints (\%)]
+                    \addplot[only marks,color=red,mark=triangle*] coordinates {
+                            ( 3, 56.2)
+                            ( 7, 66.5)
+                        };
+                        \addplot[only marks,color=green,mark=*] coordinates {
+                            ( 3, 56.2)
+                            ( 7, 62.2)
+                        };
+                        \addplot[only marks,color=blue,mark=triangle*, mark options={rotate=180}] coordinates {
+                            ( 3, 46.5)
+                            ( 7, 51.2)
+                        };
+                        \addplot[only marks,color=cyan,mark=triangle*, mark options={rotate=90}] coordinates {
+                            ( 7, 11)
+                        };
+                        \addplot[only marks,color=cyan,mark=triangle*, mark options={rotate=270}] coordinates {
+                            ( 7, 9)
+                        };
+                        \addplot[only marks,color=yellow,mark=halfsquare left*] coordinates {
+                            ( 7, 17)
+                        };
+                        \addplot[only marks,color=yellow,mark=halfsquare right*] coordinates {
+                            ( 7, 18.4)
+                        };
+                        \addplot[only marks,color=black,mark=square*] coordinates {
+                            ( 3, 53)
+                            ( 7, 60)
+                        };
+                        \addplot[only marks,color=black,mark=square, mark options={rotate=180}] coordinates {
+                            ( 7, 33.6)
+                            (11, 60)
+                        };
+                        \legend{Head, Thorax, Abdomen, L Wing, R Wing, L Antenna, R Antenna, Mean (3p), Mean (7p)}
+                    \end{axis}
+                \end{tikzpicture}
+                \caption{APK by parts in model for HOG cell size 4}
+                \label{fig:hog_apk}
+            \end{minipage}
+        \end{figure}
 
     \begin{itemize}
-    \item
-        \comment{box size comparison + graph}
     \item
         \comment{3 vs 7 part model}
     \item
