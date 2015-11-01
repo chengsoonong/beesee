@@ -20,8 +20,8 @@
 \usepackage{subcaption}
 
 
-\newcommand{\comment}[1]{\textcolor{red}{#1}}
-\newcommand{\pcomment}[1]{\textcolor{green}{#1}}
+\newcommand{\comment}[1]{}
+\newcommand{\pcomment}[1]{}
 \DeclareMathOperator*{\argmin}{argmin}
 \newfontfamily\legends{Arial}
 
@@ -39,17 +39,17 @@
 \maketitle
 
 \begin{abstract}
-    \pcomment{ABSTRACT}
+    Bees are crucial to our food supply and economy. Bee researchers possess inadequate data regarding bee populations. A crowdsourced approach to collecting such data may be feasible, but is hindered by the lack of trained bee taxonomists. An automated tool being able to classify bee species from images may be valuable. This project presents an approach to automated bee pose estimation that the author believes to be the first step towards automated bee classification from images.
 \end{abstract}
 
 \tableofcontents\newpage
 
 \chapter{Motivation}
-    Bees play a crucial role in the environment. Acting as important pollinators for numerous flowering crops, they are relied upon by our food supply and our economy, being responsible for an estimated \$200\,billion per annum in crop production[4]. Further, bees form an integral part of our ecosystems.
+    Bees play a crucial role in the environment. Acting as important pollinators for numerous flowering crops, they are relied upon by our food supply and our economy, being responsible for an estimated \$200\,billion per annum in crop production (Agriculture and Consumer Protection Department of the Food and Agriculture Organization of the United Nations, 2005). Further, bees form an integral part of our ecosystems.
 
     Bee populations worldwide have been decreasing for decades. Research into the causes of this decline, and ways of limiting it, is crucial. It is challenged by the difficulty in tracking bee populations. That difficulty is due to a number of factors, including a lack of trained taxonomists as well as limited resources being devoted to recording bee specimens.
 
-    A software tool capable of automatically classifying bee species from images would hence be valuable, allowing scientists and amateurs to document bee sightings by species and thus increasing the amount of data available for research. An extension of this would be a crowdsourcing application that would enable non-professionals to photograph bees that they encouter, storing the specimen species along with a geotag and a timestamp in a public database.
+    A software tool capable of automatically classifying bee species from images would hence be valuable, allowing scientists and amateurs to document bee sightings by species and thus increasing the amount of data available for research. An extension of this would be a crowdsourcing application that would enable non-professionals to photograph bees that they encounter, storing the specimen species along with a geotag and a timestamp in a public database.
 
 \chapter{Related works}
     Santana et al. (2014) have performed automated bee classification based on bee wing images labelled with the bee species and annotated with landmarks. Their process extracts wing features such as `vein length, width, curvature, angles and the area of all cells' (Santana et al, 2014, p. 253) that may be input into a generic classifier.
@@ -64,20 +64,20 @@
 
     Further, in the work of Santana et al. (2014), images used for training and prediction must be annotated with landmarks before relevant features can be extracted. This, again, is not something an an amateur user should be expected to do.
 
-    As such, it is necessary to develop a method to classify bees regarding of their position or orientation in the image, without requiring the user to take the photograph in a particular way, and not necessitating that they annotate landmarks. It is a logical first step to train a machine to detect the pose of the bee, as well as the bee parts useful for classification.
+    As such, it is necessary to develop a method to classify bees regardless of their position or orientation in the image, without requiring the user to take the photograph in a particular way, and not necessitating that they annotate landmarks. It is a logical first step to train a machine to detect the pose of the bee, as well as the bee parts useful for classification.
 
     Yang and Ramanan (2011) describe a model for human pose estimation. It is a supervised learning model that trains on photographs of humans that are annotated with positions of their body parts. In addition, a tree model must be defined on these parts. The tree is used in a graphical model to take advantage of relationships between body parts during training and detection.
 
     Although their work describes human pose estimation, it may conceivably be applied to bee pose estimation. Challenges may include the small size of some bee parts, such as antennae or legs, as well as the tendency for bee images to occlude parts: these may lower the accuracy of part detections. Large variations in bee poses may also be problematic, as this reduces the utility of the graphical model.
 
-    \pcomment{EXPAND}
-
 \chapter{Method}
-    Experiments to perform bee pose estimation were conducted on the BEES dataset. From the BEES dataset, 250 images with all seven parts labelled were selected and split into five sets of 50. Of these, four were used for training and one was used for testing. The images in BEES deemed unsuitable for use in experiments due to bee part occlusions were used as a basis for a negative training set: bees were cropped out of these images, leaving only the background.
+    Experiments to perform bee pose estimation were conducted on the BEES dataset. From the BEES dataset, 250 images with all seven parts labelled were selected and split into six sets of 50. Of these, four were used for training and two were used for testing. The images in BEES deemed unsuitable for use in experiments due to bee part occlusions were used as a basis for a negative training set: bees were cropped out of these images, leaving only the background.
 
     The algorithm described by Yang and Ramanan (2011) was used as a basis for the experiments. A tree structure was defined on the seven bee parts labelled in BEES, with the head as the root; the antennae and the thorax as children of the head; and the wings and the abdomen as children of the thorax.
 
     Following training on the four training sets, predictions were made on the testing set. The testing set predictions were then displayed and visually inspected for correctness and accuracy.
+
+    Experiments were run to determine the optimal model parameters: the optimal size of HOG cells, the optimal number of parts to use in the graphical model, and the optimal amount of data augmentation.
 
 \section{Algorithm}
     The algorithm used is based on the work of Yang and Ramanan (2011). It is described in more detail in their paper. A summary is provided here.
@@ -95,7 +95,7 @@
     \]
     where $(V,E)$ is a $K$-node relational graph, where the nodes correspond to parts and edges correspond to relation constraints between part types.
 
-    It is now possible to define the full score for a configuration of part types $\vec t$, part positions $\vec p$ in an image $I$: \[
+    It is now possible to define the full score for a configuration of part types $\vec t$ and part positions $\vec p$ in an image $I$: \[
         S(I,\vec p, \vec t) = S(\vec t) + \sum_{i\in V}w^{t_i}_i\cdot\phi(I,p_i)
         + \sum_{(i,j) \in E}w_{i,j}^{t_i,t_j}\cdot\psi(p_i-p_j)\textrm{,}
     \]
@@ -151,27 +151,35 @@
         \end{minipage}
     \end{figure}
     \subsection{Three-part model}
-        One of the bee part models considered is a three-part model consisting of the head, the thorax, and the abdomen, where edges running from the head to the thorax and from the thorax to the abdomen. This is illustrated in figure \ref{fig:3part_graph}.
+        One of the bee part models considered is a three-part model consisting of the head, the thorax, and the abdomen, with edges running from the head to the thorax and from the thorax to the abdomen. This is illustrated in figure \ref{fig:3part_graph}.
 
         Since it uses only three, prominent bee parts, there are few images in the BEES dataset in which one of the parts is occluded. As such, there is a larger dataset available for training and testing.
 
     \subsection{Seven-part model}
         Another model considered is a seven-part model consisting of the head, the thorax, the abdomen, the left antenna, the right antenna, the left wing, and the right wing. There are edges running from the head to the thorax, from the thorax to the abdomen, as well as from the head to the antennae, and from the thorax to the wings. It is illustrated in figure \ref{fig:7part_graph}.
 
-        Due to the higher number of parts used, it is more likely that in a particular image, a necessary part is occuded or missing. Hence, if the seven-part model is used, then the number of images available for training and testing is reduced. However, it is possible that the additional datapoints have a positive impact significant enough to compensate for a reduced training set.
+        Due to the higher number of parts used, it is more likely that in a particular image, a necessary part is occluded or missing. Hence, if the seven-part model is used, then the number of images available for training and testing is reduced. However, it is possible that the additional data points have a positive impact significant enough to compensate for a reduced training set.
 
 \section{Evaluation}
-    In our experiments, two measures were used to quantify the quality of predictions: the Probability of Correct Keypoint (PCK) and the Average Precision of Keypoints (APK). [5]
+    In our experiments, two measures were used to quantify the quality of predictions: the Probability of Correct Keypoint (PCK) and the Average Precision of Keypoints (APK). They are sourced from Yang Y. and Ramanan D. (2013).
 
     \subsection{Probability of Correct Keypoint}
-        For each image, each inferred part location is deemed either correct or incorrect. A part location is correct if it is within a threshold $\alpha\gamma$ of the ground-truth location, where $\alpha>0$ is a constant and $\gamma$ is a scaling factor equal to the distance between two particular parts in the image. The percentage of correct keypoints is then computed for each part.
+        For each image, each inferred part location is deemed either correct or incorrect. A part location is correct if it is within a threshold $\alpha\gamma$ of the ground-truth location, where $\alpha>0$ is a constant and $\gamma$ is a scaling factor equal to the distance between two particular parts in the image, in our case the head and the thorax. The percentage of correct keypoints is then computed for each part.
 
     \subsection{Average Precision of Keypoints}
-        Part joints can be thought of as objects to be detected. Hence, a precision-recall curve [6] can be used to evaluate this object detection accuracy. Due to this, APK penalises both false-negatives as well as false-positives.
+        Part joints can be thought of as objects to be detected. Hence, a precision-recall curve (Everingham M. et al., 2010) can be used to evaluate this object detection accuracy. Due to this, APK penalises both false-negatives as well as false-positives.
 
 \chapter{Results}
+    We show the results of our experiments with varying HOG cell sizes, varying numbers of parts in our model and varying amounts of data augmentstion.
     \section{HOG cell size}
-        \comment{WRITE}
+        We compared the accuracy and correctness of HOG cell sizes of $3\times3$, $4\times4$, $5\times5$, $6\times6$, $8\times8$, $10\times10$, $12\times12$, and $16\times16$ pixels. The correctness is shown in figure \ref{fig:hog_pck} and the accuracy is plotted in figure \ref{fig:hog_apk}.
+
+        It can be clearly seen that HOG cells of size $4\times4$ perform best. This is not an effect of noise: a clear trend is visible, where both the correectness and accuracy peak at the HOG size of $4\times4$.
+
+        These statistics may be verified visually. Sample predictions are shown in figures \ref{fig:hog_vis1}, \ref{fig:hog_vis2}, and \ref{fig:hog_vis3}.
+
+        The low optimal resolution of the HOG cells may be justified by the low resolutions of the bees: they form small areas of images that are themselves of low resolution.
+
         \begin{figure}
             \centering
             \begin{minipage}{0.48\textwidth}
@@ -405,7 +413,7 @@
                 \end{minipage}}
             \end{subfigure}
             \caption{Three-part model predictions on sample test image by HOG cell size}
-            \label{fig:hog_vis1}
+            \label{fig:hog_vis2}
         \end{figure}
 
         \begin{figure}[p]
@@ -469,9 +477,17 @@
                 \end{minipage}}
             \end{subfigure}
             \caption{Three-part model predictions on sample test image by HOG cell size}
-            \label{fig:hog_vis1}
+            \label{fig:hog_vis3}
         \end{figure}
-    \section{Comparison of 3-part vs 7-part models}
+    \section{Comparison of three- and seven-part models}
+        We compared the performace of the three part model against the seven-part model. The models were described in section 3.2.
+
+        As visible in figures \ref{fig:37_pck} and \ref{fig:37_apk}, the seven-part model does not perform well in predicting the locations of the wings and the antennae, although the additional parts assist in predicting the locations of the head, the thorax, and the abdomen. In fact the seven-part model is clearly superior to the three-part model in predicting the locations of the parts that they share, despite its relative lack of utility in predicting the wings and the antennae.
+
+        This may be visually confirmed by examining figures \ref{fig:37_vis1}, \ref{fig:37_vis2}, and \ref{fig:37_vis3}.
+
+        This may be explained by antennae and wings being difficult to detect. Antennae are thin and may easily be confused with the legs of the bee. Wings are transluscent, take up a wide variety of positions, and lack uniformity. Nevertheless, those parts are still detected with some precision, though rarely exactly. That extra information assists the graphical model in determining the locations of the head, abdomen and the thorax.
+
         \begin{figure}
             \centering
             \begin{minipage}{0.48\textwidth}
@@ -516,7 +532,7 @@
                         \end{axis}
                     \end{tikzpicture}
                 \caption{PCK by parts in model for HOG cell size 4}
-                \label{fig:hog_pck}
+                \label{fig:37_pck}
             \end{minipage}\hfill
             \begin{minipage}{0.48\textwidth}
                 \centering
@@ -560,7 +576,7 @@
                     \end{axis}
                 \end{tikzpicture}
                 \caption{APK by parts in model for HOG cell size 4}
-                \label{fig:hog_apk}
+                \label{fig:37_apk}
             \end{minipage}
         \end{figure}
 
@@ -593,7 +609,7 @@
                 \end{tabular}
             }}\hspace{0.1\textwidth}
             \caption{Predictions on sample test image by number of parts in model}
-            \label{fig:hog_vis1}
+            \label{fig:37_vis1}
         \end{figure}
 
         \begin{figure}[p]
@@ -625,7 +641,7 @@
                 \end{tabular}
             }}\hspace{0.1\textwidth}
             \caption{Predictions on sample test image by number of parts in model}
-            \label{fig:hog_vis1}
+            \label{fig:37_vis2}
         \end{figure}
 
         \begin{figure}[p]
@@ -657,40 +673,299 @@
                 \end{tabular}
             }}\hspace{0.1\textwidth}
             \caption{Predictions on sample test image by number of parts in model}
-            \label{fig:hog_vis1}
+            \label{fig:37_vis3}
         \end{figure}
 
     \section{Data augmentation}
-        \comment{WRITE}
+        We show the results of augmenting the seven-part model with additional data: images reflected horizontally (axis of reflection is $x=0$), images reflected both horizontally and vertically, and images reflected horizontally and vertically and rotated by 90°.
 
-        \comment{GRAPH}
+        It can be seen from figures \ref{fig:aug_pck} and \ref{fig:aug_apk} that data augmentation by reflecting the images horizontally and vertically allows for the most correct and accurate model. It is curious that augmenting the data by said reflections along with rotations by 90° results in less accurate predictions. One may hypothesize that the increased variety of bee poses that rotation by 90° creates adds noise to the parameters learned by the graphical model and therefore reduces its utility.
 
-        \comment{VISUALISATION}
+        \begin{figure}
+            \centering
+                    \begin{tikzpicture}
+                        \begin{axis}[width=0.7\textwidth,
+                            ylabel=Probability of Correct Keypoint (\%),
+                            symbolic x coords={no aug, h ref,h+v ref,h+v ref+rot}, xtick=data,
+                        legend style={at={(1.1,0.5)}, anchor=west}]
+                        \addplot[only marks,color=red,mark=triangle*] coordinates {
+                            (no aug, 63)
+                            (h ref, 72)
+                            (h+v ref, 78)
+                            (h+v ref+rot, 74)
+                        };
+                        \addplot[only marks,color=green,mark=*] coordinates {
+                            (no aug, 64)
+                            (h ref, 65)
+                            (h+v ref, 72)
+                            (h+v ref+rot, 71)
+                        };
+                        \addplot[only marks,color=blue,mark=triangle*, mark options={rotate=180}] coordinates {
+                            (no aug, 56)
+                            (h ref, 56)
+                            (h+v ref, 63)
+                            (h+v ref+rot, 61)
+                        };
+                        \addplot[only marks,color=cyan,mark=triangle*, mark options={rotate=90}] coordinates {
+                            (no aug, 28)
+                            (h ref, 26)
+                            (h+v ref, 24)
+                            (h+v ref+rot, 19)
+                        };
+                        \addplot[only marks,color=cyan,mark=triangle*, mark options={rotate=270}] coordinates {
+                            (no aug, 22)
+                            (h ref, 24)
+                            (h+v ref, 25)
+                            (h+v ref+rot, 33)
+                        };
+                        \addplot[only marks,color=yellow,mark=halfsquare left*] coordinates {
+                            (no aug, 28)
+                            (h ref, 35)
+                            (h+v ref, 32)
+                            (h+v ref+rot, 30)
+                        };
+                        \addplot[only marks,color=yellow,mark=halfsquare right*] coordinates {
+                            (no aug, 25)
+                            (h ref, 33)
+                            (h+v ref, 33)
+                            (h+v ref+rot, 41)
+                        };
+                        \addplot[only marks,color=black,mark=square*] coordinates {
+                            (no aug, 61)
+                            (h ref, 64.3)
+                            (h+v ref, 71)
+                            (h+v ref+rot, 68.7)
+                        };
+                        \addplot[only marks,color=black,mark=square, mark options={rotate=180}] coordinates {
+                            (no aug, 40.9)
+                            (h ref, 44.4)
+                            (h+v ref, 46.7)
+                            (h+v ref+rot, 47)
+                        };
+                        \legend{Head, Thorax, Abdomen, L Wing, R Wing, L Antenna, R Antenna, Mean (3p), Mean (7p)}
+                        \end{axis}
+                    \end{tikzpicture}
+                \caption{PCK by parts in model for HOG cell size 4}
+                \label{fig:aug_pck}
+            \end{figure}
+            \begin{figure}
+                \centering
+                \begin{tikzpicture}
+                    \begin{axis}[width=0.7\textwidth,
+                        ylabel=Average Precision of Keypoints (\%),
+                        symbolic x coords={no aug, h ref,h+v ref,h+v ref+rot}, xtick=data,
+                        legend style={at={(1.1,0.5)}, anchor=west}]
+                    \addplot[only marks,color=red,mark=triangle*] coordinates {
+                            (no aug, 66.5)
+                            (h ref, 73.1)
+                            (h+v ref, 72.7)
+                            (h+v ref+rot, 73.9)
+                        };
+                        \addplot[only marks,color=green,mark=*] coordinates {
+                            (no aug, 62.2)
+                            (h ref, 70.1)
+                            (h+v ref, 74.5)
+                            (h+v ref+rot, 68.3)
+                        };
+                        \addplot[only marks,color=blue,mark=triangle*, mark options={rotate=180}] coordinates {
+                            (no aug, 51.2)
+                            (h ref, 57)
+                            (h+v ref, 57.1)
+                            (h+v ref+rot, 56.2)
+                        };
+                        \addplot[only marks,color=cyan,mark=triangle*, mark options={rotate=90}] coordinates {
+                            (no aug, 11)
+                            (h ref, 8)
+                            (h+v ref, 8)
+                            (h+v ref+rot, 5.3)
+                        };
+                        \addplot[only marks,color=cyan,mark=triangle*, mark options={rotate=270}] coordinates {
+                            (no aug, 9)
+                            (h ref, 9.5)
+                            (h+v ref, 13.1)
+                            (h+v ref+rot, 15.3)
+                        };
+                        \addplot[only marks,color=yellow,mark=halfsquare left*] coordinates {
+                            (no aug, 17)
+                            (h ref, 26.1)
+                            (h+v ref, 21.8)
+                            (h+v ref+rot, 14.1)
+                        };
+                        \addplot[only marks,color=yellow,mark=halfsquare right*] coordinates {
+                            (no aug, 18.4)
+                            (h ref, 22)
+                            (h+v ref, 22.7)
+                            (h+v ref+rot, 30.2)
+                        };
+                        \addplot[only marks,color=black,mark=square*] coordinates {
+                            (no aug, 60)
+                            (h ref, 66.7)
+                            (h+v ref, 68.1)
+                            (h+v ref+rot, 66.1)
+                        };
+                        \addplot[only marks,color=black,mark=square, mark options={rotate=180}] coordinates {
+                            (no aug, 40.9)
+                            (h ref, 38)
+                            (h+v ref, 38.6)
+                            (h+v ref+rot, 37.6)
+                        };
+                        \legend{Head, Thorax, Abdomen, L Wing, R Wing, L Antenna, R Antenna, Mean (3p), Mean (7p)}
+                    \end{axis}
+                \end{tikzpicture}
+                \caption{APK by parts in model for HOG cell size 4}
+                \label{fig:aug_apk}
+        \end{figure}
 
-\chapter{Future direction}
-    \begin{itemize}
-    \item
-        \comment{use in bee classification - reference paper citing important bee parts}
-    \item
-        \comment{crowdsourcing}
-    \end{itemize}
+        \begin{figure}[p]
+            \centering
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{7p_1.pdf}
+                \caption{No augmentation}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{refl_1.pdf}
+                \caption{Reflections along the $y$-axis}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{2refl_1.pdf}
+                \caption{Reflections along the $x$- and $y$-axes\\\hspace{0pt}}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{2reflrot_1.pdf}
+                \caption{Reflections along the $x$- and $y$-axes and rotations by 90°}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{7pgt_1.pdf}
+                \caption{Ground truth}
+            \end{subfigure}
+            \hspace{0.1\textwidth}\raisebox{15ex}{\framebox[0.25\textwidth]{
+                \begin{tabular}{c l}
+                {\legends\color{red}{\rotatebox[origin=c]{0}{▲}}}&Head\\
+                {\legends\color{green}{●}}&Thorax\\
+                {\legends\color{blue}{\rotatebox[origin=c]{180}{▲}}}&Abdomen\\
+                {\legends\color{cyan}{\rotatebox[origin=c]{90}{▲}}}&Left Wing\\
+                {\legends\color{cyan}{\rotatebox[origin=c]{270}{▲}}}&Right Wing\\
+                {\legends\color{yellow}{\rotatebox[origin=c]{90}{▲}}}&Left Antenna\\
+                {\legends\color{yellow}{\rotatebox[origin=c]{270}{▲}}}&Right Antenna
+                \end{tabular}
+            }}\hspace{0.1\textwidth}
+            \caption{Predictions on sample test image by the type of data augmentation}
+            \label{fig:aug_vis1}
+        \end{figure} 
+        \begin{figure}[p]
+            \centering
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{7p_2.pdf}
+                \caption{No augmentation}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{refl_2.pdf}
+                \caption{Reflections along the $y$-axis}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{2refl_2.pdf}
+                \caption{Reflections along the $x$- and $y$-axes\\\hspace{0pt}}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{2reflrot_2.pdf}
+                \caption{Reflections along the $x$- and $y$-axes and rotations by 90°}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{7pgt_2.pdf}
+                \caption{Ground truth}
+            \end{subfigure}
+            \hspace{0.1\textwidth}\raisebox{15ex}{\framebox[0.25\textwidth]{
+                \begin{tabular}{c l}
+                {\legends\color{red}{\rotatebox[origin=c]{0}{▲}}}&Head\\
+                {\legends\color{green}{●}}&Thorax\\
+                {\legends\color{blue}{\rotatebox[origin=c]{180}{▲}}}&Abdomen\\
+                {\legends\color{cyan}{\rotatebox[origin=c]{90}{▲}}}&Left Wing\\
+                {\legends\color{cyan}{\rotatebox[origin=c]{270}{▲}}}&Right Wing\\
+                {\legends\color{yellow}{\rotatebox[origin=c]{90}{▲}}}&Left Antenna\\
+                {\legends\color{yellow}{\rotatebox[origin=c]{270}{▲}}}&Right Antenna
+                \end{tabular}
+            }}\hspace{0.1\textwidth}
+            \caption{Predictions on sample test image by the type of data augmentation}
+            \label{fig:aug_vis2}
+        \end{figure} 
+        \begin{figure}[p]
+            \centering
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{7p_3.pdf}
+                \caption{No augmentation}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{refl_3.pdf}
+                \caption{Reflections along the $y$-axis}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{2refl_3.pdf}
+                \caption{Reflections along the $x$- and $y$-axes\\\hspace{0pt}}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{2reflrot_3.pdf}
+                \caption{Reflections along the $x$- and $y$-axes and rotations by 90°}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{7pgt_3.pdf}
+                \caption{Ground truth}
+            \end{subfigure}
+            \hspace{0.1\textwidth}\raisebox{15ex}{\framebox[0.25\textwidth]{
+                \begin{tabular}{c l}
+                {\legends\color{red}{\rotatebox[origin=c]{0}{▲}}}&Head\\
+                {\legends\color{green}{●}}&Thorax\\
+                {\legends\color{blue}{\rotatebox[origin=c]{180}{▲}}}&Abdomen\\
+                {\legends\color{cyan}{\rotatebox[origin=c]{90}{▲}}}&Left Wing\\
+                {\legends\color{cyan}{\rotatebox[origin=c]{270}{▲}}}&Right Wing\\
+                {\legends\color{yellow}{\rotatebox[origin=c]{90}{▲}}}&Left Antenna\\
+                {\legends\color{yellow}{\rotatebox[origin=c]{270}{▲}}}&Right Antenna
+                \end{tabular}
+            }}\hspace{0.1\textwidth}
+            \caption{Predictions on sample test image by the type of data augmentation}
+            \label{fig:aug_vis3}
+        \end{figure}
+
+    \section{Summary}
+        Is is clearly seen that the model that results in the best predictions is one that uses the 7-part graphical model, $4\times4$ HOG cells and data augmentation by reflection along the horizontal and vertical axes. That model is characterised by an average (3-part) PCK of 71\% and average (3-part) APK of 68.1\%.
+
+\chapter{Reflection}
+    \section{Future direction}
+        The model described is has an average of 71\% success rate of correct three-part pose estimations on the test set. It is possible that by using a pose estimation model developed for use on bees, as opposed to on humans, this success rate can be improved. Such a model could, for example, account for the increased variance in bee poses and the differing proportions and appearances between species.
+
+        This bee pose estimation algorithm may find use in bee classification, by allowing the feature extractor to locate the bee, and the relevant bee parts, in the image. Further, this could lead to a crowdsourced bee population data gathering tool, as described in chapter 1.
+
+    \section{Acknowledgements}
+        I would like to thank Dr Cheng Soon Ong and Dr Stephen Gould for supervising this project. I would also like to thank Dr Anoop Cherian for his assistance.
 
 \chapter{References}
-\pcomment{use bibtex}
 
-[1] Y. Yang, D. Ramanan. Articulated Pose Estimation using Flexible Mixtures of Parts. CVPR 2011.
+Agriculture and Consumer Protection Department of the Food and Agriculture Organization of the United Nations, 2005.
 
-[2] http://www.stat.ucla.edu/~xianjie.chen/projects/pose\_estimation/pose\_estimation.html
+Chen X. and Yuille A., 2014. \textit{Articulated Pose Estimation by a Graphical Model with Image Dependent Pairwise Relations}. NIPS 2014.
+\url{http://www.stat.ucla.edu/~xianjie.chen/projects/pose_estimation/pose_estimation.html}
 
-[3] http://www.pcs.usp.br/~lti/joomla/index.php?option=com\_content\&view=article\&id=23\&Itemid=14
+Everingham M. et al., 2010. `The pascal visual object classes (voc) challenge'. \textit{International Journal of Computer Vision}, vol. 88, no. 2.
 
-[4] Agriculture and Consumer Protection Department of the Food and Agriculture Organization of the United Nations
+Santana et al. 2014. `A reference process for automating bee species identification based on wing images and digital image processing'. \textit{Ecological Informatics}, no. 0, vol. 24.
 
-[5] http://www.ics.uci.edu/~dramanan/papers/pose\_pami.pdf
+Yang Y. and Ramanan D., 2011. \textit{Articulated Pose Estimation using Flexible Mixtures of Parts}. CVPR 2011.
 
-[6] M. Everingham, L. Van Gool, C. Williams, J. Winn, and A. Zis- serman, “The pascal visual object classes (voc) challenge,”
-International Journal of Computer Vision, vol. 88, no. 2, pp. 303–
-338, 2010.
+Yang Y. and Ramanan D., 2013. `Articulated Human Detection with Flexible Mixtures of Parts'. \textit{IEEE Transactions on Pattern Analysis and Machine Intelligence}.
 
 
 
@@ -728,12 +1003,12 @@ International Journal of Computer Vision, vol. 88, no. 2, pp. 303–
             \caption{The visualisation tool}
             \label{fig:Visualisation_screenshot}
         \end{figure}
-        A visualisation tool was develop to aid in debugging code, observing performance, and developing visualisations for publication. It is able to visualise predictions, labels that are input into the Matlab code, as well labels in a JSON file. The images are read and overlaid with marked parts. A legend is provided. A screenshot is shown in figure \ref{fig:Visualisation_screenshot}.
+        A visualisation tool was developed to aid in debugging code, observing performance, and developing visualisations for publication. It is able to visualise predictions, labels that are input into the Matlab code, as well labels in a JSON file. The images are read and overlaid with marked parts. A legend is provided. A screenshot is shown in figure \ref{fig:Visualisation_screenshot}.
 
-    \section{Shuffling tool}
-        \comment{WRITE}
+    \section{Dataset randomisation and preparation tool}
+        A tool was developed that prepares the BEES dataset for input into the Matlab program. It reads a JSON file containing image file names and feature labels; shuffles the images; filters the images such that only ones with complete annotations (no parts occluded or missing) remain; and divides the images into six sets of 50. The images are then copied into appropriate folders in the previously determined random order, and the labels are saved in a .mat file for Matlab to read, as well as in a JSON file to maintain the ability to easily read them with Python.
     
-    \section{Results reader}
+    \section{Results reading tool}
         A Python class was developed that provides an interface for reading the results of Matlab predictions. It reads the Matlab files output by the prediction code and converts them into Python objects. It is used in the Visualisation Tool, but also available for import as a standalone module.
 
 \end{document}
